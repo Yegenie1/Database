@@ -1,0 +1,285 @@
+-- delete 는 컬럼명을 지정하지 않은 
+-- insert, delete, update의 결과는 실행된 row수(정수)
+-- select의 결과는 테이블이다
+
+DELETE FROM PRODUCT WHERE COMPANY ='c100'
+
+--DELETE 
+--varchar2, char의 차이
+--varchar2 : var(변하다 variable)+ char(문자)
+--			2글자면 2글자 들어갈 만큰만 저장공간을 사용
+--			100글자이면 100글자 들어갈 만큼 저장공간을 사사용
+--char(100) : 저장공간이 고정, 주민번호, 전화번호, 우편번호, 사번등
+
+DELETE FROM PRODUCT --row수 
+-->저장공간은 남겨두고 데이터만 지움
+-->데이터를 복구/취소 가능 (rollback, 롤백) 가능 
+--> truncate로 지우면 저장공간도 남겨두지 않고 , 복구/취소가 불가능
+
+SELECT * FROM PRODUCT 
+
+SELECT UPPER(ENAME) FROM EMP 
+
+SELECT LOWER(ENAME) FROM EMP  
+
+SELECT LENGTH(ENAME) FROM EMP 
+
+SELECT SUBSTR(ENAME,1,2) FROM EMP 
+
+SELECT INSTR(ENAME,'A') FROM EMP
+
+SELECT REPLACE(ENAME,'L','N')FROM EMP 
+
+--문자열로 합하기
+SELECT EMPNO||','||ENAME FROM EMP 
+
+SELECT LENGTH(TRIM(ENAME)) FROM EMP 
+
+SELECT TRIM(ENAME) FROM EMP 
+
+--앞뒤로 A지우기
+SELECT TRIM(BOTH 'A' from ename) FROM emp 
+--앞쪽 A지우기
+SELECT TRIM(LEADING 'A' from ename) FROM emp
+--뒷쪽 A지우기
+SELECT TRIM(TRAILING 'A' from ename) FROM emp
+
+SELECT EMPNO,ENAME, SAL, COMM, SAL+COMM,NVL(COMM, 0 ),SAL+NVL(COMM,0) FROM EMP 
+
+UPDATE EMP SET COMM =0 WHERE COMM IS NULL 
+
+SELECT * FROM EMP
+
+SELECT SAL + COMM AS TOTAL
+FROM EMP 
+
+--1
+SELECT LENGTH(ENAME) FROM EMP
+
+--2
+SELECT LENGTH(ENAME) FROM EMP WHERE JOB='MANAGER'
+
+--3
+SELECT ENAME,JOB FROM EMP WHERE COMM IS NULL 
+
+--4
+SELECT HIREDATE FROM EMP WHERE COMM IS NOT NULL
+
+--5
+SELECT SUBSTR(ENAME,2) FROM EMP e 
+
+--6
+SELECT SUBSTR(JOB,1,3) FROM EMP
+
+--7
+SELECT REPLACE(ENAME,'K','P')FROM EMP
+
+--8
+SELECT EMPNO||'번은 '||ENAME ||'입니다' AS SC FROM EMP 
+
+--9
+SELECT HIREDATE ,
+TO_CHAR(HIREDATE,'MONTH') AS MON,
+TO_CHAR(HIREDATE,'DAY') AS DAY
+FROM EMP
+
+--10JOB이 MANAGER이면 level1, SALESMAN이면 level2, 
+--기타이면 level3라고 LEVEL_RESULT컬럼에 출력
+SELECT EMPNO,ENAME, COMM,
+	CASE JOB
+	 WHEN 'MANAGER' THEN 'LEVEL1'
+	 WHEN 'SALESMAN' THEN 'LEVEL2'
+	 ELSE 'LEVEL3'
+	END AS LEVEL_RESULT
+FROM EMP
+
+SELECT COUNT(SAL),SUM(SAL),AVG(SAL)  FROM EMP
+
+SELECT COUNT(SAL) FROM EMP WHERE JOB='SALESMAN'
+
+SELECT COUNT(DISTINCT SAL) FROM EMP 
+
+SELECT MIN(SAL),MAX(SAL) FROM EMP 
+
+SELECT DEPTNO ,AVG(SAL) FROM EMP
+GROUP BY DEPTNO
+
+SELECT JOB,COUNT(SAL),SUM(SAL),ROUND(AVG(SAL)),MIN(SAL),MAX(SAL)  FROM EMP
+GROUP BY JOB
+
+SELECT JOB,COUNT(SAL),SUM(SAL),ROUND(AVG(SAL)),MIN(SAL),MAX(SAL)  FROM EMP
+GROUP BY JOB
+HAVING COUNT(SAL)>=4  --그룹을 지어서 검색 후, 필터링을 하고자 하는 경우
+ORDER BY JOB DESC -- 이미 모든 겸색이 다 끝난 후, 그 결과를 정렬하고자 하는 경우, 맨 끝
+-----------------------------------------------------------
+--1
+SELECT COUNT(*)  FROM EMP 
+
+--2
+SELECT DEPTNO,MGR ,COUNT(*) FROM EMP 
+GROUP BY DEPTNO,MGR 
+HAVING DEPTNO =20OR MGR <=7700
+
+--3
+SELECT DEPTNO , MIN(SAL) FROM EMP 
+GROUP BY DEPTNO 
+HAVING DEPTNO =10 OR DEPTNO =20
+
+--4
+SELECT MIN(SAL),MAX(SAL),SUM(SAL) FROM EMP  
+
+--5
+SELECT AVG(SAL) FROM EMP 
+GROUP BY DEPTNO 
+
+--6
+SELECT SUM(SAL) FROM EMP 
+GROUP BY DEPTNO 
+ORDER BY DEPTNO ASC 
+
+--7
+SELECT AVG(SAL) FROM EMP e 
+GROUP BY DEPTNO 
+HAVING AVG(SAL)>=2000
+ORDER BY DEPTNO DESC 
+
+--8
+SELECT COUNT(*),AVG(SAL) FROM EMP e 
+WHERE JOB ='MANAGER'
+
+--9
+SELECT COUNT(*) FROM EMP e 
+WHERE ENAME LIKE '%S%'
+
+--10
+SELECT COUNT(*) FROM EMP e 
+WHERE SAL >=3000 AND COMM IS NOT NULL 
+ORDER BY SAL DESC 
+--------------------------------------------------
+
+-- join 왜하는가?
+-- 검색을 하고 싶은데 항목들이 여러개의 테이블에 흩어져 있는 경우
+-- 테이블을 모아서(join) 검색
+--2개의 테이블의 공통된 값들만 조인해서 검색-->inner join
+
+SELECT * FROM "MEMBER" m ,BBS b
+WHERE m.ID =b.WRITER 
+
+SELECT b."no", b.TITLE, NAME  
+FROM "MEMBER" m ,BBS b
+WHERE m.ID =b.WRITER 
+
+---inner JOIN 
+
+SELECT e.EMPNO ,e.ENAME ,e.JOB ,d.DEPTNO ,d.LOC 
+FROM EMP e ,DEPT d 
+WHERE e.DEPTNO =d.DEPTNO 
+
+--left/right JOIN 
+SELECT *
+FROM "MEMBER" m
+LEFT OUTER JOIN BBS b 
+on(m.ID=b.WRITER)
+
+SELECT *
+FROM "MEMBER" m
+RIGHT OUTER JOIN BBS b 
+on(m.ID=b.WRITER)
+
+--emp에이블의 정보는 다보이게 dept는 맞는 것만 오른쪽에 붙여주고 싶음
+SELECT *
+FROM EMP e 
+LEFT OUTER JOIN DEPT d 
+on(e.DEPTNO=d.DEPTNO)
+
+--dept에이블의 정보는 다보이게 emp는 맞는 것만 오른쪽에 붙여주고 싶음
+SELECT *
+FROM EMP e 
+right OUTER JOIN DEPT d 
+on(e.DEPTNO=d.DEPTNO)
+
+--inner join
+SELECT *
+FROM "MEMBER" m ,BBS b 
+WHERE m.ID = b.WRITER 
+
+--outer join(left, right)
+SELECT m.ID ,m.NAME ,b.TITLE ,b.CONTENT 
+FROM "MEMBER" m 
+LEFT OUTER JOIN BBS b 
+on(m.ID=b.WRITER)
+
+SELECT *
+FROM "MEMBER" m 
+RIGHT OUTER JOIN BBS b 
+on(m.ID=b.WRITER)
+
+CREATE TABLE COMPANY(
+ID VARCHAR2(200) PRIMARY KEY,
+NAME VARCHAR2(200),
+ADDR VARCHAR2(200),
+TEL VARCHAR2(200)
+
+)
+
+INSERT INTO COMPANY VALUES('c100','good','seoul','011')
+
+INSERT INTO COMPANY VALUES('c200','soso','busan','012')
+
+INSERT INTO COMPANY VALUES('c300','maria','ulsan','013')
+
+INSERT INTO COMPANY VALUES('c400','my','kwangju','014')
+
+SELECT * FROM company
+
+SELECT *
+FROM COMPANY c ,PRODUCT p 
+WHERE c.ID = p.COMPANY 
+
+SELECT *
+FROM COMPANY c 
+LEFT OUTER JOIN PRODUCT p 
+on(c.ID = p.COMPANY)
+
+SELECT *
+FROM COMPANY c 
+RIGHT OUTER JOIN PRODUCT p 
+ON(c.ID=p.COMPANY)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
