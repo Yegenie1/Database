@@ -1,40 +1,61 @@
 package com.multi.mongoDB2;
 
+import java.util.Date;
+
 public class MemoVO2 {
 	
-	private String name;
-    private int age;
-    private String office;
-    private String phone;
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public int getAge() {
-		return age;
-	}
-	public void setAge(int age) {
-		this.age = age;
-	}
-	public String getOffice() {
-		return office;
-	}
-	public void setOffice(String office) {
-		this.office = office;
-	}
-	public String getPhone() {
-		return phone;
-	}
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-	@Override
-	public String toString() {
-		return "MemoVO [name=" + name + ", age=" + age + ", office=" + office + ", phone=" + phone + "]";
-	}
-	
-	
-
+    private String _id;//pk
+    //private String memoId;
+    private String name;
+    private String content;
+    private Date date;
+    private String weather;
+//  public void setMemoId(String memoId) {
+//      this.memoId = memoId;
+//  }
+//
+//  public String getMemoId() {
+//      return memoId;
+//  }
+    public String get_id() {
+        return _id;
+    }
+    public void set_id(String _id) {
+        this._id = _id;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getContent() {
+        return content;
+    }
+    public void setContent(String content) {
+        this.content = content;
+    }
+    public Date getDate() {
+        return date;
+    }
+    public void setDate(Date date) {
+        this.date = date;
+    }
+    public String getWeather() {
+        return weather;
+    }
+    public void setWeather(String weather) {
+        this.weather = weather;
+    }
+    @Override
+    public String toString() {
+        return "MemoVO2 [memoId=" + _id + ", name=" + name + ", content=" + content + ", date=" + date + ", weather="
+                + weather + "]";
+    }
+    
+//  @Override
+//  public String toString() {
+//      return "MemoVO [_id=" + _id + ", name=" + name + ", content=" + content + ", date=" + date + ", weather="
+//              + weather + "]";
+//  }
 }
